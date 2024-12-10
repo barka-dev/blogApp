@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-catch */
-import { Client, Databases, Query} from "appwrite"
+import { Client, Databases, Query, ID} from "appwrite"
 import {conf} from '../conf/conf.js'
 
 export class Service {
@@ -72,4 +72,30 @@ export class Service {
             return false 
         }
     }
+
+    async uploadFile(file){
+        try {
+            return await this.bucket.createFile(conf.appwriteBucketId, ID.unique(), file)
+        } catch (error) {
+            console.log("Service :: uploadFile() :: ", error)
+            return false
+        }
+    }
+
+    async deleteFile(fileId){
+        try {
+            return await this.bucket.deleteFile(conf.appwriteBucketId, fileId)
+        } catch (error) {
+            console.log("Service :: deleteFile() :: ", error)
+            return false
+        }
+    }
+
+    getFilePreview(fileId){
+        return this.bucket.getFilePreview(conf.appwriteBucketId, fileId).href
+    }
 }
+
+const service = new Service()
+
+export default service;
